@@ -1,3 +1,3 @@
-from fastapi import FastAPI
+from fastapi import FastAPI  # import FastAPI class from fastapi module
 
-app = FastAPI()
+app = FastAPI()  # create FastAPI() object as entry point
