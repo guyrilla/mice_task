@@ -5,7 +5,6 @@ Task: develop REST API for table reservation in restaurant.
 - Python >= 3.11
 - Docker >= 29.7
 - Docker Compose >= 5.5
-- SQLite >= 3.53
 
 # Run from source
 ```bash
