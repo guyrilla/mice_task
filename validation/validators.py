@@ -5,7 +5,7 @@ import re
 def validate_name(name: str) -> str:
     if not re.match(r"[a-zA-Zа-яА-Я _]{2,}", name):
         raise ValueError(
-            "Name must contain only letters, '_' and name length must be greater than 2"
+            "Name must contain only letters, '_', ' ' and name length must be greater than 2"
         )
 
     return name
