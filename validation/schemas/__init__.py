@@ -1,3 +1,3 @@
-from .reservation_schema import Reservation
+from .reservation_schema import ReservationValidateSchema
 
-__all__ = ["Reservation"]
+__all__ = ["ReservationValidateSchema"]
