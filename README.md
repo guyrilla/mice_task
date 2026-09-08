@@ -18,7 +18,5 @@ source .venv/bin/activate # activate virtual environment
 
 python -m pip install -r "requirements.txt" # install python requirements
 
-cd core
-
 uvicorn core.app:entry --reload # start uvicorn server on 127.0.0.1:8000
 ```
