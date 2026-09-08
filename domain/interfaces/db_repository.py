@@ -1,30 +1,17 @@
 from abc import ABC, abstractmethod
-from typing import Optional, List
-from domain import Reservation
-from infrastructure import ReservationModel
+from typing import List, Optional
+from domain.domain_entities.reservation_entity import Reservation, NewReservation
 
 
 class IRepository(ABC):
     @abstractmethod
-    async def get_by_id(self, value: int) -> Optional[Reservation]:
-        pass
+    async def get_by_id(self, value: int) -> Optional[Reservation]: ...
 
     @abstractmethod
-    async def add_to_db(self, entity: Reservation) -> None:
-        pass
+    async def add_to_db(self, entity: NewReservation) -> Reservation: ...
 
     @abstractmethod
-    async def get_all(self) -> List[Reservation]:
-        pass
+    async def get_all(self) -> List[Reservation]: ...
 
     @abstractmethod
-    async def change_status(self, value: int) -> None:
-        pass
-
-    @abstractmethod
-    def _to_entity(self, model: ReservationModel) -> Reservation:
-        pass
-
-    @abstractmethod
-    def _to_model(self, entity: Reservation) -> ReservationModel:
-        pass
+    async def change_status(self, value: int, new_status: str) -> None: ...
