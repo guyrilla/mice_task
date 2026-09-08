@@ -1,7 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from typing import List, Optional
-from domain import Reservation, IRepository
+from domain.domain_entities.reservation_entity import Reservation, NewReservation
+from domain.interfaces.db_repository import IRepository
 from infrastructure.models import ReservationModel
 
 
@@ -17,10 +18,12 @@ class SQLiteRepository(IRepository):
             raise ValueError(f"Reservation with id={value} not found")
         return self._to_entity(model)
 
-    async def add_to_db(self, entity: Reservation) -> None:
+    async def add_to_db(self, entity: NewReservation) -> Reservation:
         model: ReservationModel = self._to_model(entity)
         self.__session.add(model)
         await self.__session.commit()
+        await self.__session.refresh(model)  # чтобы забрать сгенерированный id
+        return self._to_entity(model)
 
     async def get_all(self) -> List[Reservation]:
         stmt = select(ReservationModel)
@@ -48,13 +51,12 @@ class SQLiteRepository(IRepository):
             status=model.status,
         )
 
-    def _to_model(self, entity: Reservation) -> ReservationModel:
+    def _to_model(self, entity: NewReservation) -> ReservationModel:
         return ReservationModel(
-            id=entity.id,
             name=entity.name,
             phone=entity.phone,
             booking_date=entity.booking_date,
             booking_time=entity.booking_time,
             number_of_guests=entity.number_of_guests,
-            status=entity.status,
+            status="active",
         )
