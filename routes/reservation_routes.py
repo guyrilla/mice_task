@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from typing import List
+from fastapi import APIRouter, Depends, HTTPException, status, Query
+from typing import List, Optional
+from datetime import date as date_type
 
 from domain.domain_entities.reservation_entity import Reservation, NewReservation
 from domain.interfaces.db_repository import IRepository
@@ -11,9 +12,15 @@ router = APIRouter()
 
 @router.get("/bookings")
 async def get_reserved_tables(
+    date: Optional[date_type] = Query(
+        None, description="Фильтр по дате, например 2026-08-20"
+    ),
     db_repo: IRepository = Depends(get_repository),
 ) -> List[Reservation]:
-    return await db_repo.get_all()
+    bookings = await db_repo.get_all()
+    if date is not None:
+        bookings = [b for b in bookings if b.booking_date == date]
+    return bookings
 
 
 @router.post("/bookings", status_code=status.HTTP_201_CREATED)
@@ -61,6 +68,6 @@ async def cancel_reservation(
             status_code=status.HTTP_404_NOT_FOUND, detail="Booking not found"
         )
 
-    await db_repo.change_status(id, "cancelled")
+    await db_repo.change_status(id)
     reservation.status = "cancelled"
     return reservation
