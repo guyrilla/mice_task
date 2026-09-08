@@ -1,3 +1,15 @@
-from fastapi import FastAPI  # import FastAPI class from fastapi module
+# core/app.py
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+from routes import router
+from infrastructure.database import init_models
 
-entry = FastAPI()  # create FastAPI() object as entry point
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await init_models()
+    yield
+
+
+entry = FastAPI(lifespan=lifespan)
+entry.include_router(router)
